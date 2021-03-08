@@ -1,3 +1,7 @@
+from glob import glob
+from os.path import basename
+from os.path import splitext
+
 import setuptools
 
 with open("README.md", "r", encoding="utf-8") as fh:
@@ -18,6 +22,8 @@ setuptools.setup(
         "Operating System :: OS Independent",
     ],
     packages=setuptools.find_packages('src'),
+    package_dir={'': 'src'},
+    py_modules=[splitext(basename(path))[0] for path in glob('src/*.py')],
     python_requires=">=3.6",
 )
 

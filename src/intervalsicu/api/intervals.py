@@ -1,5 +1,7 @@
 import requests
 import datetime
+
+from .error import CredentialError
 from .workout import WorkoutDoc
 from .activity import Activity
 from .wellness import Wellness
@@ -8,10 +10,10 @@ from .wellness import Wellness
 class Intervals(object):
     URL = "https://intervals.icu"
 
-    def __init__(self, athlete_id, api_key):
+    def __init__(self, athlete_id, api_key, session=None):
         self.athlete_id = athlete_id
         self.password = api_key
-        self.session = None
+        self.session = session
 
     def _get_session(self):
         if self.session is not None:
@@ -22,14 +24,24 @@ class Intervals(object):
         self.session.auth = ('API_KEY', self.password)
         return self.session
 
+    def _make_request(self, method, url, params=None):
+        session = self._get_session()
+        res = session.request(method, url, params=params)
+        if res.status_code == 401:
+            raise CredentialError(status=res.status_code, message="Unauthorized", url=res.url)
+        if res.status_code == 403:
+            raise ClientError(status=res.status_code, message="Error access resource", url=res.url)
+
+        return res
+
     def activities(self):
         """
         CSV formatted API call
 
         :return: Text data in CSV format
         """
-        session = self._get_session()
-        res = session.get("{}/api/v1/athlete/{}/activities.csv".format(Intervals.URL, self.athlete_id))
+        url = "{}/api/v1/athlete/{}/activities.csv".format(Intervals.URL, self.athlete_id)
+        res = self._make_request("get", url)
         return res.text
 
     def activity(self, activity_id):
@@ -39,8 +51,8 @@ class Intervals(object):
         :param: Activity id number
         :return: Activity Object
         """
-        session = self._get_session()
-        res = session.get("{}/api/v1/activity/{}".format(Intervals.URL, activity_id))
+        url = "{}/api/v1/activity/{}".format(Intervals.URL, activity_id)
+        res = self._make_request("get", url)
         return Activity(**res.json())
 
     def wellness(self, start_date, end_date=None):
@@ -110,7 +122,7 @@ class Intervals(object):
         return folders
 
 
-def recur(o, indent=0):
+def _recur(o, indent=0):
     for key, val in o.items():
         if type(val) is list:
             for item in val:
