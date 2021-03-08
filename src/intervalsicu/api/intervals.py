@@ -24,7 +24,7 @@ class Intervals(object):
         self.session.auth = ('API_KEY', self.password)
         return self.session
 
-    def _make_request(self, method, url, params=None):
+    def _make_request(self, method, url, params=None, json=None):
         session = self._get_session()
         res = session.request(method, url, params=params)
         if res.status_code == 401:
@@ -79,10 +79,9 @@ class Intervals(object):
             params['newest'] = end_date.isoformat()
             url = "{}/api/v1/athlete/{}/wellness".format(Intervals.URL, self.athlete_id)
         else:
-            url = "{}/api/v1/athlete/{}/wellness/{}".format(Intervals.URL, self.athlete_id, oldest)
+            url = "{}/api/v1/athlete/{}/wellness/{}".format(Intervals.URL, self.athlete_id, start_date.isoformat())
 
-        session = self._get_session()
-        res = session.get(url, params=params)
+        res = self._make_request("get", url, params)
         j = res.json()
         if type(j) is list:
             result = []
@@ -102,9 +101,9 @@ class Intervals(object):
         if type(data) is not Wellness:
             raise TypeError("Expected Wellness object")
 
-        session = self._get_session()
         date = data['id']
-        res = session.put("{}/api/v1/athlete/{}/wellness/{}".format(Intervals.URL, self.athlete_id, date), json=data)
+        url = "{}/api/v1/athlete/{}/wellness/{}".format(Intervals.URL, self.athlete_id, date)
+        res = self._make_request("put", url, json=data)
         return Wellness(**res.json())
 
     def folders(self):
@@ -113,8 +112,8 @@ class Intervals(object):
 
         :return: List of Folder objects
         """
-        session = self._get_session()
-        res = session.get("{}/api/v1/athlete/{}/folders".format(Intervals.URL, self.athlete_id))
+        url = "{}/api/v1/athlete/{}/folders".format(Intervals.URL, self.athlete_id)
+        res = self._make_request("get", url)
         folders = []
         for f in res.json():
             folders.append(Folder(**f))

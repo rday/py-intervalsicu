@@ -1,16 +1,5 @@
-from .api.workout import WorkoutDoc
 from .api.activity import Activity
+from .api.folder import Folder
 from .api.intervals import Intervals
-
-
-
-
-class Error(dict):
-    fields = [
-        "status",
-        "error",
-        "message",
-
-        "path",
-        "timestamp",
-    ]
+from .api.wellness import Wellness
+from .api.workout import WorkoutDoc
