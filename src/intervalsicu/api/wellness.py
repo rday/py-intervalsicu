@@ -1,4 +1,3 @@
-
 class Wellness(dict):
     fields = [
         'diastolic',
@@ -35,5 +34,3 @@ class Wellness(dict):
             raise TypeError("Unknown property {}".format(key))
 
         dict.__setitem__(self, key, value)
-
-

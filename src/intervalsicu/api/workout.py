@@ -1,9 +1,24 @@
-class Children(dict):
-    fields = ['athlete_id', 'id', 'icu_training_load', 'name', 'description', 'type', 'indoor', 'color', 'moving_time', 'updated', 'workout_doc', 'folder_id', 'day', 'days', 'plan_applied']
+class Workout(dict):
+    fields = [
+        'athlete_id',
+        'id',
+        'icu_training_load',
+        'name',
+        'description',
+        'type',
+        'indoor',
+        'color',
+        'moving_time',
+        'updated',
+        'workout_doc',
+        'folder_id',
+        'day',
+        'days',
+        'plan_applied']
 
     def __init__(self, **kwargs):
         for field in kwargs.keys():
-            if field not in Children.fields:
+            if field not in Workout.fields:
                 raise TypeError("Unknown property {}".format(field))
 
         if kwargs.get('workout_doc') is not None:
@@ -13,7 +28,11 @@ class Children(dict):
 
 
 class WorkoutDoc(dict):
-    fields = ['steps', 'duration', 'zoneTimes', 'hrZoneTimes']
+    fields = [
+        'steps',
+        'duration',
+        'zoneTimes',
+        'hrZoneTimes']
 
     def __init__(self, **kwargs):
         for field in kwargs.keys():
@@ -30,7 +49,16 @@ class WorkoutDoc(dict):
 
 
 class Step(dict):
-    fields = ['ramp', 'power', 'warmup', 'duration', 'reps', 'text', 'steps', 'cooldown', 'cadence']
+    fields = [
+        'ramp',
+        'power',
+        'warmup',
+        'duration',
+        'reps',
+        'text',
+        'steps',
+        'cooldown',
+        'cadence']
 
     def __init__(self, **kwargs):
         for field in kwargs.keys():
@@ -59,3 +87,31 @@ class Power(dict):
 
         dict.__init__(self, **kwargs)
 
+
+class Folder(dict):
+    fields = [
+        'athlete_id',
+        'id',
+        'type',
+        'name',
+        'description',
+        'start_date_local',
+        'children',
+        'canEdit',
+        'sharedWithCount',
+        'shareToken',
+        'owner',
+        'sharedFolderId']
+
+    def __init__(self, **kwargs):
+        for field in kwargs.keys():
+            if field not in Folder.fields:
+                raise TypeError("Unknown property {}".format(field))
+
+        if kwargs.get('children') is not None:
+            workouts = []
+            for c in kwargs['children']:
+                workouts.append(Workout(**c))
+            kwargs['children'] = workouts
+
+        dict.__init__(self, **kwargs)

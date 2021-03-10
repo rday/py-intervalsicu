@@ -1,8 +1,8 @@
 import requests
 import datetime
 
-from .error import CredentialError
-from .workout import WorkoutDoc
+from .error import CredentialError, ClientError
+from .workout import Workout, Folder
 from .activity import Activity
 from .wellness import Wellness
 
@@ -27,10 +27,22 @@ class Intervals(object):
     def _make_request(self, method, url, params=None, json=None):
         session = self._get_session()
         res = session.request(method, url, params=params)
+
         if res.status_code == 401:
-            raise CredentialError(status=res.status_code, message="Unauthorized", url=res.url)
+            raise CredentialError(
+                status=res.status_code,
+                message="Unauthorized",
+                url=res.url)
         if res.status_code == 403:
-            raise ClientError(status=res.status_code, message="Error access resource", url=res.url)
+            raise ClientError(
+                status=res.status_code,
+                message="Error accessing resource",
+                url=res.url)
+        if res.status_code == 404:
+            raise ClientError(
+                status=res.status_code,
+                message="Resource not found",
+                url=res.url)
 
         return res
 
@@ -40,7 +52,8 @@ class Intervals(object):
 
         :return: Text data in CSV format
         """
-        url = "{}/api/v1/athlete/{}/activities.csv".format(Intervals.URL, self.athlete_id)
+        url = "{}/api/v1/athlete/{}/activities.csv".format(
+            Intervals.URL, self.athlete_id)
         res = self._make_request("get", url)
         return res.text
 
@@ -54,6 +67,21 @@ class Intervals(object):
         url = "{}/api/v1/activity/{}".format(Intervals.URL, activity_id)
         res = self._make_request("get", url)
         return Activity(**res.json())
+
+    def folders(self):
+        """
+        Retrieve a list of workout folders
+
+        :return: List of Folder objects
+        """
+        url = "{}/api/v1/athlete/{}/folders".format(
+            Intervals.URL, self.athlete_id)
+        res = self._make_request("get", url)
+        folders = []
+        for f in res.json():
+            folders.append(Folder(**f))
+
+        return folders
 
     def wellness(self, start_date, end_date=None):
         """
@@ -77,9 +105,11 @@ class Intervals(object):
 
             params['oldest'] = start_date.isoformat()
             params['newest'] = end_date.isoformat()
-            url = "{}/api/v1/athlete/{}/wellness".format(Intervals.URL, self.athlete_id)
+            url = "{}/api/v1/athlete/{}/wellness".format(
+                Intervals.URL, self.athlete_id)
         else:
-            url = "{}/api/v1/athlete/{}/wellness/{}".format(Intervals.URL, self.athlete_id, start_date.isoformat())
+            url = "{}/api/v1/athlete/{}/wellness/{}".format(
+                Intervals.URL, self.athlete_id, start_date.isoformat())
 
         res = self._make_request("get", url, params)
         j = res.json()
@@ -102,29 +132,28 @@ class Intervals(object):
             raise TypeError("Expected Wellness object")
 
         date = data['id']
-        url = "{}/api/v1/athlete/{}/wellness/{}".format(Intervals.URL, self.athlete_id, date)
+        url = "{}/api/v1/athlete/{}/wellness/{}".format(
+            Intervals.URL, self.athlete_id, date)
         res = self._make_request("put", url, json=data)
         return Wellness(**res.json())
 
-    def folders(self):
-        """
-        Retrieve a list of workout folders
+    def workouts(self):
+        url = "{}/api/v1/athlete/{}/workouts".format(
+            Intervals.URL, self.athlete_id)
 
-        :return: List of Folder objects
-        """
-        url = "{}/api/v1/athlete/{}/folders".format(Intervals.URL, self.athlete_id)
         res = self._make_request("get", url)
-        folders = []
-        for f in res.json():
-            folders.append(Folder(**f))
+        j = res.json()
+        if type(j) is list:
+            result = []
+            for item in j:
+                result.append(Workout(**item))
+            return result
 
-        return folders
+        raise TypeError('Unexpected result from server')
 
+    def workout(self, workout_id):
+        url = "{}/api/v1/athlete/{}/workouts/{}".format(
+            Intervals.URL, self.athlete_id, workout_id)
 
-def _recur(o, indent=0):
-    for key, val in o.items():
-        if type(val) is list:
-            for item in val:
-                recur(item, indent+1)
-        elif type(val) is dict:
-            recur(o[key], indent+1)
+        res = self._make_request("get", url)
+        return Workout(**res.json())

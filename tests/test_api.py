@@ -1,10 +1,7 @@
 import pytest
 from datetime import date
 
-from intervalsicu import Intervals
-from intervalsicu import Activity
-from intervalsicu import Wellness
-from intervalsicu import Folder
+from intervalsicu import Activity, Intervals, Folder, Wellness, Workout
 
 
 class MockResponse(object):
@@ -14,12 +11,20 @@ class MockResponse(object):
         self.url = url
 
     def json(self):
+        """
+        Hack to detect which URL is being accessed and return a mock
+        object to the test.
+        """
         if 'activity' in self.url:
             return Activity()
         if 'wellness' in self.url:
             return Wellness()
         if 'folders' in self.url:
             return Folder()
+        if self.url.endswith('workouts'):
+            return [Workout()]
+        if 'workout' in self.url:
+            return Workout()
 
 
 class MockSession(object):
@@ -44,6 +49,10 @@ def test_activity(intervals_svc):
     intervals_svc.activity(12345)
 
 
+def test_folders(intervals_svc):
+    intervals_svc.folders()
+
+
 def test_wellness(intervals_svc):
     with pytest.raises(TypeError):
         intervals_svc.wellness()
@@ -64,5 +73,9 @@ def test_wellness_put(intervals_svc):
     intervals_svc.wellness_put(Wellness(id="id"))
 
 
-def test_folders(intervals_svc):
-    intervals_svc.folders()
+def test_workouts(intervals_svc):
+    intervals_svc.workouts()
+
+
+def test_workout(intervals_svc):
+    intervals_svc.workout(1)
