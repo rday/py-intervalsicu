@@ -1,7 +1,7 @@
 import pytest
 from datetime import date
 
-from intervalsicu import Activity, Intervals, Folder, Wellness, Workout
+from intervalsicu import Activity, Event, Intervals, Folder, Wellness, Workout
 
 
 class MockResponse(object):
@@ -17,6 +17,8 @@ class MockResponse(object):
         """
         if 'activity' in self.url:
             return Activity()
+        if 'events' in self.url:
+            return [Event()]
         if 'wellness' in self.url:
             return Wellness()
         if 'folders' in self.url:
@@ -47,6 +49,16 @@ def test_activities(intervals_svc):
 
 def test_activity(intervals_svc):
     intervals_svc.activity(12345)
+
+
+def test_events(intervals_svc):
+    with pytest.raises(TypeError):
+        intervals_svc.events(date.fromisoformat("2020-01-01"), "2020-01-01")
+
+    with pytest.raises(TypeError):
+        intervals_svc.events("2020-01-01", date.fromisoformat("2020-01-01"))
+
+    intervals_svc.events(date.fromisoformat("2020-01-01"), date.fromisoformat("2020-01-01"))
 
 
 def test_folders(intervals_svc):

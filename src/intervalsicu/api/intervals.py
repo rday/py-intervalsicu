@@ -4,6 +4,7 @@ import datetime
 from .error import CredentialError, ClientError
 from .workout import Workout, Folder
 from .activity import Activity
+from .event import Event
 from .wellness import Wellness
 
 
@@ -67,6 +68,27 @@ class Intervals(object):
         url = "{}/api/v1/activity/{}".format(Intervals.URL, activity_id)
         res = self._make_request("get", url)
         return Activity(**res.json())
+
+    def events(self, start_date, end_date):
+        if type(start_date) is not datetime.date:
+            raise TypeError("datetime required")
+
+        if type(end_date) is not datetime.date:
+            raise TypeError("datetime required")
+
+        params = {}
+
+        params['oldest'] = start_date.isoformat()
+        params['newest'] = end_date.isoformat()
+        url = "{}/api/v1/athlete/{}/events".format(
+            Intervals.URL, self.athlete_id)
+
+        res = self._make_request("get", url, params=params)
+        events = []
+        for e in res.json():
+            events.append(Event(**e))
+
+        return events
 
     def folders(self):
         """

@@ -11,6 +11,8 @@ but there are gaps. Please open an issue (or a PR) for any missing functionality
 
 # Example
 
+Write all your activities to a CSV file
+
 ```python
 import csv
 import io
@@ -33,4 +35,26 @@ def activities_to_csv():
 
 if __name__ == "__main__":
     activities_to_csv()
+```
+
+Download a list of events in JSON.
+
+```python
+import pprint
+from datetime import date
+
+from intervalsicu import Intervals
+
+
+def events():
+    svc = Intervals("MY ATHLETE ID", "MY API KEY")
+
+    start = date.fromisoformat("2021-03-08")
+    end = date.fromisoformat("2021-03-09")
+    events = svc.events(start, end)
+    pprint.pprint(events)
+
+
+if __name__ == "__main__":
+    events()
 ```
