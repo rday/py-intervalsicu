@@ -1,4 +1,4 @@
-# Intervals.ICO Python API
+# Intervals.ICU Python API
 
 This is a basic API to work with the Intervals.ICU Rest API.
 You can obtain an API for the Intervals.ICU site by following the
