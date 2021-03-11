@@ -58,7 +58,9 @@ def test_events(intervals_svc):
     with pytest.raises(TypeError):
         intervals_svc.events("2020-01-01", date.fromisoformat("2020-01-01"))
 
-    intervals_svc.events(date.fromisoformat("2020-01-01"), date.fromisoformat("2020-01-01"))
+    intervals_svc.events(
+        date.fromisoformat("2020-01-01"),
+        date.fromisoformat("2020-01-01"))
 
 
 def test_folders(intervals_svc):

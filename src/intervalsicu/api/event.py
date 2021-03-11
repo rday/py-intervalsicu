@@ -30,7 +30,6 @@ class Event(dict):
         'plan_workout_id',
         'plan_applied',
         'icu_intensity']
-        
 
     def __init__(self, **kwargs):
         for field in kwargs.keys():

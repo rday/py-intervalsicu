@@ -27,7 +27,7 @@ class Intervals(object):
 
     def _make_request(self, method, url, params=None, json=None):
         session = self._get_session()
-        res = session.request(method, url, params=params)
+        res = session.request(method, url, params=params, json=json)
 
         if res.status_code == 401:
             raise CredentialError(
@@ -70,6 +70,14 @@ class Intervals(object):
         return Activity(**res.json())
 
     def events(self, start_date, end_date):
+        """
+        Returns Events over a range of dates.
+        A single date will return an object for that day.
+
+        :param: Starting date
+        :param: End date
+        :return: List of Event objects
+        """
         if type(start_date) is not datetime.date:
             raise TypeError("datetime required")
 
@@ -160,6 +168,11 @@ class Intervals(object):
         return Wellness(**res.json())
 
     def workouts(self):
+        """
+        Return a list of all Workouts
+
+        :return: List of Workout objects
+        """
         url = "{}/api/v1/athlete/{}/workouts".format(
             Intervals.URL, self.athlete_id)
 

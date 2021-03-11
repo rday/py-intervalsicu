@@ -1,15 +1,35 @@
 # Intervals.ICU Python API
 
-This is a basic API to work with the Intervals.ICU Rest API.
-You can obtain an API for the Intervals.ICU site by following the
-instructions from (this post)[https://forum.intervals.icu/t/api-access-to-intervals-icu/609].
+This API provides a basic interface to work with the Intervals.ICU.
+You can obtain further documentation for the Intervals.ICU site by
+following the instructions from [this post](https://forum.intervals.icu/t/api-access-to-intervals-icu/609).
 
-API functionality is described in the thread above. This API tries to provide all functionality,
-but there are gaps. Please open an issue (or a PR) for any missing functionality.
+API functionality is described in the thread above. This API aims to provide all functionality, but there are gaps. Please open an issue (or a PR) for any missing functionality.
+
+# Examples
+
+Update a field in your wellness document
+
+```python
+import pprint
+from datetime import date
+
+from intervalsicu import Intervals
 
 
+def wellness():
+    svc = Intervals("MY ATHLETE ID", "MY API KEY")
 
-# Example
+    start = date.fromisoformat("2021-03-10")
+    wellness = svc.wellness(start)
+    wellness['restingHR'] = 57
+    wellness = svc.wellness_put(wellness)
+    pprint.pprint(wellness)
+
+
+if __name__ == "__main__":
+    wellness()
+```
 
 Write all your activities to a CSV file
 
