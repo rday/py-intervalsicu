@@ -9,7 +9,7 @@ with open("README.md", "r", encoding="utf-8") as fh:
 
 setuptools.setup(
     name="intervalsicu",
-    version="0.1.0",
+    version="0.1.1",
     author="Ryan Day",
     author_email="ryanday2@gmail.com",
     description="A basic interface to the Intervals.icu system",
@@ -25,4 +25,5 @@ setuptools.setup(
     package_dir={'': 'src'},
     py_modules=[splitext(basename(path))[0] for path in glob('src/*.py')],
     python_requires=">=3.6",
+    install_requires=["requests==2.25.1", "pytest==6.2.2"]
 )
