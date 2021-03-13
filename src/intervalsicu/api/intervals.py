@@ -120,6 +120,7 @@ class Intervals(object):
         Retrieve a list of workout folders
 
         :return: List of Folder objects
+        :rtype: [:class:`Folder`]
         """
         url = "{}/api/v1/athlete/{}/folders".format(
             Intervals.URL, self.athlete_id)
@@ -137,9 +138,12 @@ class Intervals(object):
         Specifying two dates (start and end) will return all wellness
         objects within the range.
 
-        :start_date: Starting date (or single date)
-        :end_date: End date (or omit if only requesting a single date)
+        :param start_date: Starting date (or single date)
+        :type start_date: datetime.date
+        :param end_date: End date (or omit if only requesting a single date)
+        :type end_date: datetime.date
         :return: List of Wellness objects
+        :rtype: [:class:`Wellness`]
         """
         if type(start_date) is not datetime.date:
             raise TypeError("datetime required")
@@ -168,12 +172,14 @@ class Intervals(object):
 
         return Wellness(**j)
 
-    def wellness_put(self, data):
+    def wellness_put(self, wellness):
         """
         Update a wellness object.
 
-        :data: Wellness object
-        :return: The updated wellness object
+        :param wellness: :class:`Wellness` object
+        :type wellness: :class:`Wellness`
+        :return: The updated :class:`Wellness` object
+        :rtype: :class:`Wellness`
         """
         if type(data) is not Wellness:
             raise TypeError("Expected Wellness object")
@@ -186,9 +192,10 @@ class Intervals(object):
 
     def workouts(self):
         """
-        Return a list of all Workouts
+        Return a list of all :class:`Workout` objects
 
-        :return: List of Workout objects
+        :return: List of :class:`Workout` objects
+        :rtype: [:class:`Workout`]
         """
         url = "{}/api/v1/athlete/{}/workouts".format(
             Intervals.URL, self.athlete_id)
@@ -205,10 +212,12 @@ class Intervals(object):
 
     def workout(self, workout_id):
         """
-        Return a single workout by ID
+        Return a single :class:`Workout` by ID
 
-        :workout_id: Id of workout
-        :return: Workout object
+        :param workout_id: Id of workout
+        :type workout_id: int
+        :return: :class:`Workout` object
+        :rtype: :class:`Workout`
         """
         url = "{}/api/v1/athlete/{}/workouts/{}".format(
             Intervals.URL, self.athlete_id, workout_id)
