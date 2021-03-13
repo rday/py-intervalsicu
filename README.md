@@ -6,6 +6,8 @@ following the instructions from [this post](https://forum.intervals.icu/t/api-ac
 
 API functionality is described in the thread above. This API aims to provide all functionality, but there are gaps. Please open an issue (or a PR) for any missing functionality.
 
+Full documentation can be found [here](https://py-intervalsicu.readthedocs.io)
+
 # Examples
 
 Update a field in your wellness document

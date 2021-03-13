@@ -9,9 +9,20 @@ from .wellness import Wellness
 
 
 class Intervals(object):
+    """
+    This is the API class that applications interact with.
+    Pass your athlete_id and api_key, and then make calls.
+    """
     URL = "https://intervals.icu"
 
     def __init__(self, athlete_id, api_key, session=None):
+        """
+        Create a new IntervalsICU API object
+
+        :param athlete_id: Your athlete_id
+        :type athlete_id: int
+        :rtype: :class:Intervals
+        """
         self.athlete_id = athlete_id
         self.password = api_key
         self.session = session
@@ -49,9 +60,10 @@ class Intervals(object):
 
     def activities(self):
         """
-        CSV formatted API call
+        Returns all your activities formatted in CSV
 
         :return: Text data in CSV format
+        :rtype: str
         """
         url = "{}/api/v1/athlete/{}/activities.csv".format(
             Intervals.URL, self.athlete_id)
@@ -60,10 +72,12 @@ class Intervals(object):
 
     def activity(self, activity_id):
         """
-        Activity by ID
+        Returns an :class:`Activity` by ID
 
-        :param: Activity id number
+        :param activity_id: Activity id number
+        :type activity_id: int
         :return: Activity Object
+        :rtype: :class:`Activity`
         """
         url = "{}/api/v1/activity/{}".format(Intervals.URL, activity_id)
         res = self._make_request("get", url)
@@ -71,12 +85,15 @@ class Intervals(object):
 
     def events(self, start_date, end_date):
         """
-        Returns Events over a range of dates.
+        Returns a list of :class:`Event` objects over a range of dates.
         A single date will return an object for that day.
 
-        :param: Starting date
-        :param: End date
+        :param start_date: Starting date
+        :type start_date: datetime.date
+        :param end_date: End date
+        :type end_date: datetime.date
         :return: List of Event objects
+        :rtype: [:class:`Event`]
         """
         if type(start_date) is not datetime.date:
             raise TypeError("datetime required")
@@ -103,6 +120,7 @@ class Intervals(object):
         Retrieve a list of workout folders
 
         :return: List of Folder objects
+        :rtype: [:class:`Folder`]
         """
         url = "{}/api/v1/athlete/{}/folders".format(
             Intervals.URL, self.athlete_id)
@@ -120,9 +138,12 @@ class Intervals(object):
         Specifying two dates (start and end) will return all wellness
         objects within the range.
 
-        :param: Starting date (or single date)
-        :param: End date (or omit if only requesting a single date)
+        :param start_date: Starting date (or single date)
+        :type start_date: datetime.date
+        :param end_date: End date (or omit if only requesting a single date)
+        :type end_date: datetime.date
         :return: List of Wellness objects
+        :rtype: [:class:`Wellness`]
         """
         if type(start_date) is not datetime.date:
             raise TypeError("datetime required")
@@ -151,12 +172,14 @@ class Intervals(object):
 
         return Wellness(**j)
 
-    def wellness_put(self, data):
+    def wellness_put(self, wellness):
         """
         Update a wellness object.
 
-        :param: Wellness object
-        :return: The updated wellness object
+        :param wellness: :class:`Wellness` object
+        :type wellness: :class:`Wellness`
+        :return: The updated :class:`Wellness` object
+        :rtype: :class:`Wellness`
         """
         if type(data) is not Wellness:
             raise TypeError("Expected Wellness object")
@@ -169,9 +192,10 @@ class Intervals(object):
 
     def workouts(self):
         """
-        Return a list of all Workouts
+        Return a list of all :class:`Workout` objects
 
-        :return: List of Workout objects
+        :return: List of :class:`Workout` objects
+        :rtype: [:class:`Workout`]
         """
         url = "{}/api/v1/athlete/{}/workouts".format(
             Intervals.URL, self.athlete_id)
@@ -187,6 +211,14 @@ class Intervals(object):
         raise TypeError('Unexpected result from server')
 
     def workout(self, workout_id):
+        """
+        Return a single :class:`Workout` by ID
+
+        :param workout_id: Id of workout
+        :type workout_id: int
+        :return: :class:`Workout` object
+        :rtype: :class:`Workout`
+        """
         url = "{}/api/v1/athlete/{}/workouts/{}".format(
             Intervals.URL, self.athlete_id, workout_id)
 
