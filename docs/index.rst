@@ -7,11 +7,17 @@
 Intervals.icu API
 =================
 
-This is a Python API for interacting with the https://intervals.icu training site.
-The goal is provide an API exposing all functionality of Intervals.icu. This is not
-complete, and features are prioritized by customer need.
+This API provides a basic interface to work with the Intervals.ICU.
+You can obtain further documentation for the Intervals.ICU site by
+following the instructions from this post_.
 
-Find documentation for API calls in the :class:`intervalsicu.Intervals` class.
+.. _post: https://forum.intervals.icu/t/api-access-to-intervals-icu/609
+
+API functionality is described in the thread above. This API aims to provide
+all functionality, but there are gaps. Please open an issue (or a PR) for any
+missing functionality.
+
+You can find documentation for API calls in the :class:`intervalsicu.Intervals` class.
 Other classes contain objects that are sent or received from Intervals.icu.
 
 Installation
