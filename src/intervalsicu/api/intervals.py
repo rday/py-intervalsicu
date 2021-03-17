@@ -6,6 +6,7 @@ from .workout import Workout, Folder
 from .activity import Activity
 from .event import Event
 from .wellness import Wellness
+from .calendar import Calendar
 
 
 class Intervals(object):
@@ -82,6 +83,21 @@ class Intervals(object):
         url = "{}/api/v1/activity/{}".format(Intervals.URL, activity_id)
         res = self._make_request("get", url)
         return Activity(**res.json())
+
+    def calendars(self):
+        """
+        Returns a list of :class:`Calendar` objects
+
+        :return: List of :class:`Calendar`
+        :rtype: [:class:`Calendar`]
+        """
+        url = "{}/api/v1/athlete/{}/calendars".format(Intervals.URL, self.athlete_id)
+        res = self._make_request("get", url)
+        calendars = []
+        for c in res.json():
+            calendars.append(Calendar(**c))
+
+        return calendars
 
     def events(self, start_date, end_date):
         """
@@ -181,13 +197,13 @@ class Intervals(object):
         :return: The updated :class:`Wellness` object
         :rtype: :class:`Wellness`
         """
-        if type(data) is not Wellness:
+        if type(wellness) is not Wellness:
             raise TypeError("Expected Wellness object")
 
-        date = data['id']
+        date = wellness['id']
         url = "{}/api/v1/athlete/{}/wellness/{}".format(
             Intervals.URL, self.athlete_id, date)
-        res = self._make_request("put", url, json=data)
+        res = self._make_request("put", url, json=wellness)
         return Wellness(**res.json())
 
     def workouts(self):

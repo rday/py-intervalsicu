@@ -1,7 +1,7 @@
 import pytest
 from datetime import date
 
-from intervalsicu import Activity, Event, Intervals, Folder, Wellness, Workout
+from intervalsicu import Activity, Calendar, Event, Intervals, Folder, Wellness, Workout
 
 
 class MockResponse(object):
@@ -27,6 +27,8 @@ class MockResponse(object):
             return [Workout()]
         if 'workout' in self.url:
             return Workout()
+        if 'calendar' in self.url:
+            return [Calendar()]
 
 
 class MockSession(object):
@@ -49,6 +51,10 @@ def test_activities(intervals_svc):
 
 def test_activity(intervals_svc):
     intervals_svc.activity(12345)
+
+
+def test_calendars(intervals_svc):
+    intervals_svc.calendars()
 
 
 def test_events(intervals_svc):
