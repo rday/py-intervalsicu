@@ -84,6 +84,23 @@ class Intervals(object):
         res = self._make_request("get", url)
         return Activity(**res.json())
 
+    def activity_put(self, activity):
+        """
+        Returns an :class:`Activity` by ID
+
+        :param activity: Activity object
+        :type activity: :class:`Activity`
+        :return: Activity Object
+        :rtype: :class:`Activity`
+        """
+        if type(activity) is not Activity:
+            raise TypeError("Expected Activity object")
+
+        url = "{}/api/v1/activity/{}".format(Intervals.URL, activity['id'])
+        res = self._make_request("put", url, json=activity)
+        print(res.json())
+        return Activity(**res.json())
+
     def calendars(self):
         """
         Returns a list of :class:`Calendar` objects

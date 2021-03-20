@@ -9,7 +9,7 @@ with open("README.md", "r", encoding="utf-8") as fh:
 
 setuptools.setup(
     name="intervalsicu",
-    version="0.1.1",
+    version="0.1.3",
     author="Ryan Day",
     author_email="ryanday2@gmail.com",
     description="A basic interface to the Intervals.icu system",

@@ -53,6 +53,13 @@ def test_activity(intervals_svc):
     intervals_svc.activity(12345)
 
 
+def test_activity_put(intervals_svc):
+    with pytest.raises(TypeError):
+        intervals_svc.activity_put(0)
+
+    intervals_svc.activity_put(Activity(id="id"))
+
+
 def test_calendars(intervals_svc):
     intervals_svc.calendars()
 
