@@ -98,7 +98,7 @@ class Intervals(object):
 
         url = "{}/api/v1/activity/{}".format(Intervals.URL, activity['id'])
         res = self._make_request("put", url, json=activity)
-        print(res.json())
+
         return Activity(**res.json())
 
     def calendars(self):
