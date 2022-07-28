@@ -23,6 +23,10 @@ class Intervals(object):
 
         :param athlete_id: Your athlete_id
         :type athlete_id: int
+        :param api_key: Your API key
+        :type api_key: string
+        :param strict: Set strict validation for server objects
+        :type strict: bool
         :rtype: :class:Intervals
         """
         self.athlete_id = athlete_id
@@ -180,7 +184,6 @@ class Intervals(object):
         res = self._make_request("get", url)
         folders = []
         for f in res.json():
-            print(f)
             folders.append(Folder(**f))
 
         return folders
