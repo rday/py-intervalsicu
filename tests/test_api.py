@@ -4,11 +4,21 @@ from datetime import date
 from intervalsicu import Activity, Calendar, Event, Intervals, Folder, Wellness, Workout
 
 
+def to_kwargs(l):
+    """Hack to set a None value for all known fields in an API call"""
+    d = {}
+    for k in l:
+        d[k] = None
+
+    return d
+
+
 class MockResponse(object):
     def __init__(self, status_code, url):
         self.text = ''
         self.status_code = status_code
         self.url = url
+        self.headers = None
 
     def json(self):
         """
@@ -16,17 +26,17 @@ class MockResponse(object):
         object to the test.
         """
         if 'activity' in self.url:
-            return Activity()
+            return Activity(**to_kwargs(Activity.fields))
         if 'events' in self.url:
-            return [Event()]
+            return [Event(**to_kwargs(Event.fields))]
         if 'wellness' in self.url:
-            return Wellness()
+            return Wellness(**to_kwargs(Wellness.fields))
         if 'folders' in self.url:
-            return Folder()
+            return Folder(**to_kwargs(Folder.fields))
         if self.url.endswith('workouts'):
-            return [Workout()]
+            return [Workout(**to_kwargs(Workout.fields))]
         if 'workout' in self.url:
-            return Workout()
+            return Workout(**to_kwargs(Workout.fields))
         if 'calendar' in self.url:
             return [Calendar()]
 
@@ -35,7 +45,7 @@ class MockSession(object):
     def __init__(self):
         pass
 
-    def request(self, method, url, params=None, json=None):
+    def request(self, method, url, params=None, json=None, headers=None):
         return MockResponse(200, url)
 
 

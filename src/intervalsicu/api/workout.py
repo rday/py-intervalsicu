@@ -1,3 +1,6 @@
+from intervalsicu.api.intervals_object import IntervalsObject
+
+
 class Workout(dict):
     fields = [
         'athlete_id',
@@ -17,9 +20,7 @@ class Workout(dict):
         'plan_applied']
 
     def __init__(self, **kwargs):
-        for field in kwargs.keys():
-            if field not in Workout.fields:
-                raise TypeError("Unknown property {}".format(field))
+        IntervalsObject.validate(set(Workout.fields), set(kwargs.keys()))
 
         if kwargs.get('workout_doc') is not None:
             kwargs['workout_doc'] = WorkoutDoc(**kwargs['workout_doc'])
@@ -35,9 +36,7 @@ class WorkoutDoc(dict):
         'hrZoneTimes']
 
     def __init__(self, **kwargs):
-        for field in kwargs.keys():
-            if field not in WorkoutDoc.fields:
-                raise TypeError("Unknown property {}".format(field))
+        IntervalsObject.validate(set(WorkoutDoc.fields), set(kwargs.keys()))
 
         if kwargs.get('steps') is not None:
             steps = []
@@ -50,20 +49,11 @@ class WorkoutDoc(dict):
 
 class Step(dict):
     fields = [
-        'ramp',
         'power',
-        'warmup',
-        'duration',
-        'reps',
-        'text',
-        'steps',
-        'cooldown',
-        'cadence']
+        'duration']
 
     def __init__(self, **kwargs):
-        for field in kwargs.keys():
-            if field not in Step.fields:
-                raise TypeError("Unknown property {}".format(field))
+        IntervalsObject.validate(set(Step.fields), set(kwargs.keys()))
 
         if kwargs.get('steps') is not None:
             steps = []
@@ -78,12 +68,10 @@ class Step(dict):
 
 
 class Power(dict):
-    fields = ['end', 'start', 'units', 'value']
+    fields = ['units', 'value']
 
     def __init__(self, **kwargs):
-        for field in kwargs.keys():
-            if field not in Power.fields:
-                raise TypeError("Unknown property {}".format(field))
+        IntervalsObject.validate(set(Power.fields), set(kwargs.keys()))
 
         dict.__init__(self, **kwargs)
 

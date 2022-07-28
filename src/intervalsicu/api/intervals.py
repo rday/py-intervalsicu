@@ -37,9 +37,14 @@ class Intervals(object):
         self.session.auth = ('API_KEY', self.password)
         return self.session
 
-    def _make_request(self, method, url, params=None, json=None):
+    def _make_request(self, method, url, params=None, json=None, headers=None):
         session = self._get_session()
-        res = session.request(method, url, params=params, json=json)
+        if json is not None:
+            if headers is None:
+                headers = {}
+            headers['Content-Type'] = 'application/json'
+
+        res = session.request(method, url, params=params, json=json, headers=headers)
 
         if res.status_code == 401:
             raise CredentialError(
@@ -55,6 +60,11 @@ class Intervals(object):
             raise ClientError(
                 status=res.status_code,
                 message="Resource not found",
+                url=res.url)
+        if res.status_code == 422:
+            raise ClientError(
+                status=res.status_code,
+                message="Could not process object",
                 url=res.url)
 
         return res
@@ -98,6 +108,8 @@ class Intervals(object):
 
         url = "{}/api/v1/activity/{}".format(Intervals.URL, activity['id'])
         res = self._make_request("put", url, json=activity)
+
+        print(res)
 
         return Activity(**res.json())
 

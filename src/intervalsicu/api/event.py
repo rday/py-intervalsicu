@@ -1,40 +1,23 @@
 from .workout import WorkoutDoc
+from intervalsicu.api.intervals_object import IntervalsObject
 
 
 class Event(dict):
     fields = [
-        'id',
-        'start_date_local',
+        'joules',
         'icu_training_load',
-        'icu_atl',
-        'icu_ctl',
-        'calendar_id',
-        'uid',
+        'icu_intensity',
         'category',
-        'end_date_local',
-        'name',
-        'description',
-        'type',
-        'indoor',
-        'color',
-        'moving_time',
-        'icu_ftp',
-        'atl_days',
-        'ctl_days',
-        'updated',
-        'not_on_fitness_chart',
-        'workout_doc',
-        'push_errors',
-        'plan_athlete_id',
-        'plan_folder_id',
-        'plan_workout_id',
-        'plan_applied',
-        'icu_intensity']
+        'description', 'plan_applied', 'id', 'moving_time',
+        'plan_workout_id', 'workout_doc', 'target', 'calendar_id',
+        'ctl_days', 'color', 'uid', 'indoor', 'load_target', 'type',
+        'push_errors', 'distance_target', 'joules_above_ftp', 'time_target',
+        'not_on_fitness_chart', 'plan_folder_id', 'atl_days', 'icu_ctl',
+        'updated', 'plan_athlete_id', 'icu_ftp', 'end_date_local',
+        'start_date_local', 'icu_atl', 'name']
 
     def __init__(self, **kwargs):
-        for field in kwargs.keys():
-            if field not in Event.fields:
-                raise TypeError("Unknown property {}".format(field))
+        IntervalsObject.validate(set(Event.fields), set(kwargs.keys()))
 
         if kwargs.get('workout_doc') is not None:
             kwargs['workout_doc'] = WorkoutDoc(**kwargs['workout_doc'])
