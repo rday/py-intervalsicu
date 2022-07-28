@@ -1,6 +1,7 @@
 import requests
 import datetime
 
+from ..api import config
 from .error import CredentialError, ClientError
 from .workout import Workout, Folder
 from .activity import Activity
@@ -16,17 +17,23 @@ class Intervals(object):
     """
     URL = "https://intervals.icu"
 
-    def __init__(self, athlete_id, api_key, session=None):
+    def __init__(self, athlete_id, api_key, session=None, strict=True):
         """
         Create a new IntervalsICU API object
 
         :param athlete_id: Your athlete_id
         :type athlete_id: int
+        :param api_key: Your API key
+        :type api_key: string
+        :param strict: Set strict validation for server objects
+        :type strict: bool
         :rtype: :class:Intervals
         """
         self.athlete_id = athlete_id
         self.password = api_key
         self.session = session
+
+        config['strict_validation'] = strict
 
     def _get_session(self):
         if self.session is not None:
@@ -37,9 +44,19 @@ class Intervals(object):
         self.session.auth = ('API_KEY', self.password)
         return self.session
 
-    def _make_request(self, method, url, params=None, json=None):
+    def _make_request(self, method, url, params=None, json=None, headers=None):
         session = self._get_session()
-        res = session.request(method, url, params=params, json=json)
+        if json is not None:
+            if headers is None:
+                headers = {}
+            headers['Content-Type'] = 'application/json'
+
+        res = session.request(
+            method,
+            url,
+            params=params,
+            json=json,
+            headers=headers)
 
         if res.status_code == 401:
             raise CredentialError(
@@ -55,6 +72,11 @@ class Intervals(object):
             raise ClientError(
                 status=res.status_code,
                 message="Resource not found",
+                url=res.url)
+        if res.status_code == 422:
+            raise ClientError(
+                status=res.status_code,
+                message="Could not process object",
                 url=res.url)
 
         return res
@@ -108,7 +130,9 @@ class Intervals(object):
         :return: List of :class:`Calendar`
         :rtype: [:class:`Calendar`]
         """
-        url = "{}/api/v1/athlete/{}/calendars".format(Intervals.URL, self.athlete_id)
+        url = "{}/api/v1/athlete/{}/calendars".format(
+            Intervals.URL,
+            self.athlete_id)
         res = self._make_request("get", url)
         calendars = []
         for c in res.json():

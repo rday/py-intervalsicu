@@ -20,7 +20,7 @@ from intervalsicu import Intervals
 
 
 def wellness():
-    svc = Intervals("MY ATHLETE ID", "MY API KEY")
+    svc = Intervals("MY ATHLETE ID", "MY API KEY", strict=False)
 
     start = date.fromisoformat("2021-03-10")
     wellness = svc.wellness(start)
@@ -43,7 +43,7 @@ from intervalsicu import Intervals
 
 
 def activities_to_csv():
-    svc = Intervals("MY ATHLETE ID", "MY API KEY")
+    svc = Intervals("MY ATHLETE ID", "MY API KEY", strict=False)
 
     activities_csv = io.StringIO(svc.activities())
 

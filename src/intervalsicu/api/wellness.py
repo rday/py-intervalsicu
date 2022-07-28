@@ -1,3 +1,6 @@
+from intervalsicu.api.intervals_object import IntervalsObject
+
+
 class Wellness(dict):
     fields = [
         'id',
@@ -41,9 +44,7 @@ class Wellness(dict):
         ]
 
     def __init__(self, **kwargs):
-        for field in kwargs.keys():
-            if field not in Wellness.fields:
-                raise TypeError(f'Unknown property {field}')
+        IntervalsObject.validate(set(Wellness.fields), set(kwargs.keys()))
 
         dict.__init__(self, **kwargs)
 
