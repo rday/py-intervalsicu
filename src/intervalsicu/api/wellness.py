@@ -1,36 +1,54 @@
 class Wellness(dict):
     fields = [
-        'diastolic',
-        'fatigue',
-        'hrv',
-        'hrvSDNN',
-        'hydration',
         'id',
-        'kcalConsumed',
-        'menstrualPhase',
-        'menstrualPhasePredicted',
-        'mood',
-        'motivation',
-        'restingHR',
-        'sleepQuality',
-        'sleepSecs',
-        'soreness',
-        'spO2',
-        'stress',
-        'systolic',
+        'ctl',
+        'atl',
+        'rampRate',
+        'ctlLoad',
+        'atlLoad',
+        'sportInfo',
         'updated',
         'weight',
+        'restingHR',
+        'hrv',
+        'hrvSDNN',
+        'menstrualPhase',
+        'menstrualPhasePredicted',
+        'kcalConsumed',
+        'sleepSecs',
+        'sleepScore',
+        'sleepQuality',
+        'avgSleepingHR',
+        'soreness',
+        'fatigue',
+        'stress',
+        'mood',
+        'motivation',
+        'injury',
+        'spO2',
+        'systolic',
+        'diastolic',
+        'hydration',
+        'hydrationVolume',
+        'readiness',
+        'baevskySI',
+        'bloodGlucose',
+        'lactate',
+        'bodyFat',
+        'abdomen',
+        'vo2max',
+        'comments',
         ]
 
     def __init__(self, **kwargs):
         for field in kwargs.keys():
             if field not in Wellness.fields:
-                raise TypeError("Unknown property {}".format(field))
+                raise TypeError(f'Unknown property {field}')
 
         dict.__init__(self, **kwargs)
 
     def __setitem__(self, key, value):
         if key not in Wellness.fields:
-            raise TypeError("Unknown property {}".format(key))
+            raise TypeError(f'Unknown property {key}')
 
         dict.__setitem__(self, key, value)
