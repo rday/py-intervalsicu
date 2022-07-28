@@ -1,10 +1,18 @@
-import pprint
 import logging
-from typing import Type
+from ..api import config
 
 
 class IntervalsObject(dict):
+    """
+    Allows validation of responses from the server.
+    If the module's configuration enforces strict
+    validation, then an error is raised and details
+    are logged.
+    """
     def validate(expected, remote):
+        if config['strict_validation'] is False:
+            return
+
         new_fields = remote - expected
         deprecated_fields = expected - remote
 

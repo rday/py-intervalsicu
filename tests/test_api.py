@@ -32,7 +32,7 @@ class MockResponse(object):
         if 'wellness' in self.url:
             return Wellness(**to_kwargs(Wellness.fields))
         if 'folders' in self.url:
-            return Folder(**to_kwargs(Folder.fields))
+            return [Folder(**to_kwargs(Folder.fields))]
         if self.url.endswith('workouts'):
             return [Workout(**to_kwargs(Workout.fields))]
         if 'workout' in self.url:
@@ -64,8 +64,12 @@ def test_activity(intervals_svc):
 
 
 def test_activity_put(intervals_svc):
-    with pytest.raises(TypeError):
-        intervals_svc.activity_put(0)
+    """
+    This test turns off validation. This is strictly to execute the code path
+    to prevent accidental typos.
+    """
+    from intervalsicu.api import config
+    config['strict_validation'] = False
 
     intervals_svc.activity_put(Activity(id="id"))
 
@@ -104,8 +108,12 @@ def test_wellness(intervals_svc):
 
 
 def test_wellness_put(intervals_svc):
-    with pytest.raises(TypeError):
-        intervals_svc.wellness_put(0)
+    """
+    This test turns off validation. This is strictly to execute the code path
+    to prevent accidental typos.
+    """
+    from intervalsicu.api import config
+    config['strict_validation'] = False
 
     intervals_svc.wellness_put(Wellness(id="id"))
 

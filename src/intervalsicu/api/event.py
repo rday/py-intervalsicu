@@ -14,7 +14,9 @@ class Event(dict):
         'push_errors', 'distance_target', 'joules_above_ftp', 'time_target',
         'not_on_fitness_chart', 'plan_folder_id', 'atl_days', 'icu_ctl',
         'updated', 'plan_athlete_id', 'icu_ftp', 'end_date_local',
-        'start_date_local', 'icu_atl', 'name']
+        'start_date_local', 'icu_atl', 'name',
+        'distance', 'athlete_cannot_edit', 'hide_from_athlete',
+        'created_by_id']
 
     def __init__(self, **kwargs):
         IntervalsObject.validate(set(Event.fields), set(kwargs.keys()))

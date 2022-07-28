@@ -1,6 +1,7 @@
 import requests
 import datetime
 
+from ..api import config
 from .error import CredentialError, ClientError
 from .workout import Workout, Folder
 from .activity import Activity
@@ -16,7 +17,7 @@ class Intervals(object):
     """
     URL = "https://intervals.icu"
 
-    def __init__(self, athlete_id, api_key, session=None):
+    def __init__(self, athlete_id, api_key, session=None, strict=True):
         """
         Create a new IntervalsICU API object
 
@@ -27,6 +28,8 @@ class Intervals(object):
         self.athlete_id = athlete_id
         self.password = api_key
         self.session = session
+
+        config['strict_validation'] = strict
 
     def _get_session(self):
         if self.session is not None:
@@ -44,7 +47,12 @@ class Intervals(object):
                 headers = {}
             headers['Content-Type'] = 'application/json'
 
-        res = session.request(method, url, params=params, json=json, headers=headers)
+        res = session.request(
+            method,
+            url,
+            params=params,
+            json=json,
+            headers=headers)
 
         if res.status_code == 401:
             raise CredentialError(
@@ -109,8 +117,6 @@ class Intervals(object):
         url = "{}/api/v1/activity/{}".format(Intervals.URL, activity['id'])
         res = self._make_request("put", url, json=activity)
 
-        print(res)
-
         return Activity(**res.json())
 
     def calendars(self):
@@ -120,7 +126,9 @@ class Intervals(object):
         :return: List of :class:`Calendar`
         :rtype: [:class:`Calendar`]
         """
-        url = "{}/api/v1/athlete/{}/calendars".format(Intervals.URL, self.athlete_id)
+        url = "{}/api/v1/athlete/{}/calendars".format(
+            Intervals.URL,
+            self.athlete_id)
         res = self._make_request("get", url)
         calendars = []
         for c in res.json():
@@ -172,6 +180,7 @@ class Intervals(object):
         res = self._make_request("get", url)
         folders = []
         for f in res.json():
+            print(f)
             folders.append(Folder(**f))
 
         return folders

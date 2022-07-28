@@ -92,9 +92,7 @@ class Folder(dict):
         'sharedFolderId']
 
     def __init__(self, **kwargs):
-        for field in kwargs.keys():
-            if field not in Folder.fields:
-                raise TypeError("Unknown property {}".format(field))
+        IntervalsObject.validate(set(Folder.fields), set(kwargs.keys()))
 
         if kwargs.get('children') is not None:
             workouts = []

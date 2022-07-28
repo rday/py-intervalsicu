@@ -1,6 +1,5 @@
-import pprint
-
 from intervalsicu.api.intervals_object import IntervalsObject
+
 
 class Activity(dict):
     fields = [
