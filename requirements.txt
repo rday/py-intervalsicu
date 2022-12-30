@@ -1,4 +1,4 @@
 requests>=2.28.1
-pytest==6.2.2
+pytest==6.2.5
 sphinx-autoapi==1.7.0
 sphinx-rtd-theme==0.5.1

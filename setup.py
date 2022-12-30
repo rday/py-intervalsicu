@@ -25,5 +25,5 @@ setuptools.setup(
     package_dir={'': 'src'},
     py_modules=[splitext(basename(path))[0] for path in glob('src/*.py')],
     python_requires=">=3.6",
-    install_requires=["requests>=2.28.1", "pytest==6.2.2"]
+    install_requires=["requests>=2.28.1", "pytest==6.2.5"]
 )
