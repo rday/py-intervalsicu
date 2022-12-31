@@ -8,6 +8,7 @@ from .activity import Activity
 from .event import Event
 from .wellness import Wellness
 from .calendar import Calendar
+from .power_curve import PowerCurve
 
 
 class Intervals(object):
@@ -281,3 +282,40 @@ class Intervals(object):
 
         res = self._make_request("get", url)
         return Workout(**res.json())
+
+    def power_curve(
+        self,
+        newest=datetime.datetime.now(),
+        curves="90d",
+        type="Ride",
+        include_ranks=False,
+        sub_max_efforts=0,
+        filters='[{"field_id": "type", "value": ["Ride", "VirtualRide"]}]',
+    ):
+        """
+        Returns a :class:`PowerCurve` by ID
+
+        :param newest: Datetime of newest possible activity to be included
+        :type newest: datetime.datetime
+        :param curves: Curves to be returned
+        :type curves: str
+        :param type: Activity Type
+        :type type: str
+        :param include_ranks: Include ranks boolean
+        :type include_ranks: bool
+        :param sub_max_efforts: Number of sub max efforts
+        :type sub_max_efforts: int
+        :return: PowerCurve Object
+        :rtype: :class:`PowerCurve`
+        """
+        url = f"{self.URL}/api/v1/athlete/{self.athlete_id}/power-curves"
+        params = {
+            "curves": curves,
+            "type": type,
+            "includeRanks": include_ranks,
+            "subMaxEfforts": f"{sub_max_efforts}",
+            "filters": filters,
+            "newest": newest.strftime("%Y-%m-%dT%H:%M:%S"),
+        }
+        res = self._make_request("get", url, params=params)
+        return PowerCurve(**res.json())

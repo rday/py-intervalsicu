@@ -1,7 +1,7 @@
 import pytest
 from datetime import date
 
-from intervalsicu import Activity, Calendar, Event, Intervals, Folder, Wellness, Workout
+from intervalsicu import Activity, Calendar, Event, Intervals, Folder, Wellness, Workout, PowerCurve
 
 
 def to_kwargs(l):
@@ -39,6 +39,8 @@ class MockResponse(object):
             return Workout(**to_kwargs(Workout.fields))
         if 'calendar' in self.url:
             return [Calendar()]
+        if self.url.endswith('power-curves'):
+            return PowerCurve(**to_kwargs((PowerCurve.fields)))
 
 
 class MockSession(object):
@@ -124,3 +126,7 @@ def test_workouts(intervals_svc):
 
 def test_workout(intervals_svc):
     intervals_svc.workout(1)
+
+
+def test_power_curve(intervals_svc):
+    intervals_svc.power_curve()
