@@ -82,6 +82,18 @@ class Intervals(object):
 
         return res
 
+    def activities_list(self,oldest,newest):
+        """
+        Returns all your activities as a list
+
+        :return: List of activities
+        :rtype: list
+        """
+        url = "{}/api/v1/athlete/{}/activities?oldest={}&newest={}".format(
+            Intervals.URL, self.athlete_id,oldest,newest)
+        res = self._make_request("get", url)
+        return res.json()
+
     def activities(self):
         """
         Returns all your activities formatted in CSV
